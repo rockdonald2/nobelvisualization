@@ -1,0 +1,576 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap');
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    line-height: 1.5;
+    letter-spacing: .5px;
+}
+
+html {
+    font-size: 10px;
+    /* 1rem */
+}
+
+body {
+    font-family: 'Source Serif Pro',
+        serif;
+    margin: 0 auto;
+    background: #fff;
+    padding-top: 5rem;
+    width: 125rem;
+    height: 255rem;
+    color: #2d3436;
+}
+
+body.hidden {
+    overflow-y: hidden;
+}
+
+.loading {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 3;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+.loaded {
+    display: none;
+}
+
+.loading p:nth-child(1) {
+    margin-bottom: 2rem;
+}
+
+.loading p:nth-child(2) {
+    color: hsl(0, 0%, 60%);
+    opacity: 0.5;
+}
+
+#chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(125, 1rem);
+    grid-template-rows: repeat(210, 1rem);
+}
+
+#title,
+#info {
+    text-align: center;
+}
+
+#title {
+    width: 200px;
+    height: 150px;
+    font-size: 1.8rem;
+    grid-column: 9 / 29;
+    grid-row: 6 / 21;
+}
+
+#title span {
+    font-size: 2.4rem;
+    display: block;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#info {
+    width: 650px;
+    height: 200px;
+    font-size: 1.6rem;
+    grid-column: 53 / 108;
+    grid-row: 6 / 21;
+}
+
+#nobel-menu {
+    width: 109rem;
+    height: 5rem;
+    display: flex;
+    grid-column: 9 / 119;
+    grid-row: 31 / 36;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+}
+
+#gender-select,
+#cat-select,
+#country-select {
+    margin: 0 1rem;
+}
+
+#nobel-menu select {
+    width: 15rem;
+    padding: .5rem;
+    background-color: #ececec;
+    border: none;
+    border-radius: 1rem;
+    color: #777;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+#nobel-time {
+    width: 115rem;
+    height: 25rem;
+    grid-column: 6 / 120;
+    grid-row: 51 / 76;
+    position: relative;
+}
+
+#time-tooltip {
+    position: absolute;
+    pointer-events: none;
+    color: #eee;
+    background: #222;
+    opacity: 0.7;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+        0 12.5px 10px rgba(0, 0, 0, 0.06),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+        0 100px 80px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    left: -9999px;
+    border-radius: 5px;
+}
+
+#time-tooltip h2 {
+    text-align: center;
+    margin-bottom: .5rem;
+}
+
+#time-tooltip p {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#time-tooltip .time-tooltip-circle {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-color: goldenrod;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+#time-tooltip p.empty {
+    color: hsl(0, 0%, 60%);
+}
+
+#nobel-map {
+    width: 115rem;
+    height: 45rem;
+    grid-column: 6 / 120;
+    grid-row: 90 / 135;
+    position: relative;
+}
+
+.graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+    display: none;
+}
+
+.land {
+    fill: #ddd;
+}
+
+.boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+}
+
+#map-tooltip {
+    position: absolute;
+    pointer-events: none;
+    /* megintcsak azért van szükségünk erre, hogy lehessen a tooltip alá is klikkelni */
+    color: #eee;
+    font-size: 12px;
+    opacity: 0.7;
+    background: #222;
+    /* border: 2px solid #555; */
+    /* border-color: goldenrod; */
+    padding: 10px;
+    left: -9999px;
+    /* jelenleg nem fog látszódni a pozíció miatt */
+    border-radius: 5px;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+        0 12.5px 10px rgba(0, 0, 0, 0.06),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+        0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+#map-tooltip h2 {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+#map-tooltip p {
+    text-align: center;
+}
+
+.country {
+    fill: rgb(175, 195, 186);
+}
+
+.country.active {
+    fill: rgb(155, 175, 166);
+}
+
+.centroid {
+    /* fill: red; */
+    fill-opacity: .3;
+    pointer-events: none;
+    /* ez ahhoz kell, hogy a kör ellenére is kilehessen választani majd az országot */
+}
+
+.centroid.active {
+    fill: goldenrod !important;
+    fill-opacity: .6;
+}
+
+#nobel-bar {
+    width: 115rem;
+    height: 30rem;
+    grid-column: 6 / 120;
+    grid-row: 152 / 182;
+    position: relative;
+}
+
+#nobel-bar .xaxis .domain {
+    display: none;
+}
+
+#nobel-bar #metric-radio {
+    position: absolute;
+    top: -1rem;
+    right: 5rem;
+    text-align: center;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+}
+
+line.limit {
+    stroke: hsl(0, 0%, 60%);
+    stroke-width: 3;
+    stroke-dasharray: 1rem;
+    pointer-events: none;
+}
+
+rect.bar:not(.active) {
+    fill: hsl(0, 0%, 60%);
+}
+
+#nobel-bar #metric-radio form {
+    display: flex;
+    margin-left: .5rem;
+}
+
+#nobel-bar #metric-radio form label {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+}
+
+#nobel-bar #metric-radio form label:nth-child(2) {
+    margin-left: 1rem;
+}
+
+#nobel-bar #metric-radio form label input[type="radio"] {
+    margin-left: .5rem;
+}
+
+#nobel-bar #metric-radio form label input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.btn-radio {
+    width: 1.6rem;
+    height: 1.6rem;
+
+    border: 1px solid hsl(0, 0%, 14%);
+    border-radius: 100%;
+    margin-right: .5rem;
+}
+
+.btn-radio::before,
+.btn-radio::after {
+    content: "";
+    display: block;
+
+    width: inherit;
+    height: inherit;
+
+    border-radius: inherit;
+
+    position: absolute;
+    transform: scale(0);
+    transform-origin: center center;
+
+    opacity: 0;
+    transition: all .3s;
+}
+
+.btn-radio::before {
+    background: hsl(0, 0%, 14%);
+}
+
+.btn-radio::after {
+    background: hsl(0, 0%, 60%);
+    opacity: .4;
+    transition: all .6s;
+}
+
+input:checked+.btn-radio::before {
+    opacity: 1;
+    transform: scale(.6);
+}
+
+input:hover+.btn-radio,
+input:focus+.btn-radio {
+    border: 1px solid hsl(0, 0%, 60%);
+}
+
+input:hover~.radio-text {
+    color: hsl(0, 0%, 60%);
+}
+
+input:focus+.btn-radio::after,
+input:active+.btn-radio::after {
+    opacity: .1;
+    transform: scale(1.8);
+}
+
+#bar-tooltip {
+    position: absolute;
+    pointer-events: none;
+    color: #eee;
+    background: #222;
+    opacity: 0.7;
+    box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+        0 12.5px 10px rgba(0, 0, 0, 0.06),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+        0 100px 80px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    left: -9999px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#bar-tooltip h2 {
+    font-size: 1.4rem;
+    margin-bottom: .25rem;
+}
+
+#bar-tooltip p {
+    font-size: 1.2rem;
+}
+
+#nobel-list {
+    width: 40rem;
+    height: 45rem;
+    grid-column: 10 / 52;
+    grid-row: 196 / 241;
+    font-size: 1.2rem;
+}
+
+#nobel-list table {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.wrapper {
+    width: 100%;
+}
+
+#nobel-list table tbody {
+    display: block;
+    height: 37rem;
+    overflow: auto;
+}
+
+#nobel-list table tbody>tr>td:nth-child(1) {
+    width: 8rem;
+}
+
+#nobel-list table tbody>tr>td:nth-child(2) {
+    width: 16rem;
+}
+
+#nobel-list table tbody>tr>td:nth-child(3) {
+    width: 16rem;
+}
+
+#nobel-list table thead>tr {
+    position: relative;
+    display: block;
+}
+
+
+#nobel-list #year {
+    width: 7.25rem;
+}
+
+#nobel-list #category {
+    width: 14.75rem;
+}
+
+#nobel-list #name {
+    width: 15rem;
+}
+
+#nobel-list tr:hover {
+    color: hsl(0, 0%, 60%);
+    cursor: pointer;
+}
+
+#nobel-winner {
+    width: 60rem;
+    height: 45rem;
+    grid-column: 60 / 121;
+    grid-row: 196 / 241;
+    display: grid;
+    grid-template-rows: repeat(45, 1rem);
+    grid-template-columns: repeat(60, 1rem);
+    position: relative;
+}
+
+#nobel-winner #picbox {
+    grid-column: 37 / -8;
+    grid-row: 1 / 25;
+}
+
+#nobel-winner #picbox img {
+    width: 100%;
+    height: 14rem;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+#nobel-winner #winner-title {
+    font-size: 2rem;
+    font-weight: bold;
+    grid-column: 5 / 30;
+    grid-row: 2 / 5;
+    text-align: center;
+}
+
+#nobel-winner #infobox {
+    grid-column: 5 / 30;
+    grid-row: 8 / 13;
+}
+
+#nobel-winner .property {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+}
+
+#nobel-winner .property .label {
+    font-weight: bold;
+}
+
+#nobel-winner .property span {
+    text-align: right;
+}
+
+#nobel-winner #biobox {
+    grid-column: 5 / -5;
+    grid-row: 17 / -5;
+    font-size: 1.3rem;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+#nobel-winner #biobox p:not(:nth-child(1)) {
+    margin-top: 1rem;
+}
+
+#nobel-winner #readmore {
+    grid-column: 5 / -5;
+    grid-row: 44 / -1;
+    text-align: right;
+    font-size: 1.3rem;
+}
+
+#nobel-winner #readmore a {
+    text-decoration: none;
+}
+
+#nobel-winner #readmore a:hover {
+    text-decoration: underline;
+}
+
+.cover {
+    width: 60rem;
+    height: 45rem;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+#time-header, #map-header, #bar-header, #bio-header {
+    height: 5rem;
+    width: 62.5rem;
+    grid-column: 6 / 70;
+}
+
+#time-header {
+    grid-row: 42 / 47;
+}
+
+.header {
+    font-size: 1.8rem;
+    margin-bottom: .5rem;
+}
+
+.description {
+    font-size: 1.4rem;
+}
+
+#map-header {
+    grid-row: 80 / 85;
+}
+
+#bar-header {
+    grid-row: 142 / 147;
+}
+
+#bio-header {
+    grid-row: 187 / 192;
+}

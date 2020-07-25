@@ -1,0 +1,278 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /* beállítjuk a fontot */
+    background: #fefefe;
+    /* beállítjuk a hátteret */
+    width: 1150px;
+    /* a vizualizációnk szélességét */
+    margin: 0 auto;
+    /* felső és alsó margók 0px, még a szélsők auto-k, így középre rendeződik a vizualizációnk */
+}
+
+a:link {
+    color: royalblue;
+    text-decoration: none;
+    /* linkek esetén megváltoztatjuk azok színét és kivesszük az aláhúzást */
+}
+
+a:hover {
+    text-decoration: underline;
+    /* hover esetén aláhúzodnak a linkek */
+}
+
+#chart {
+    position: relative;
+}
+
+#nbviz {
+    position: absolute;
+    top: 70px;
+    width: 100%;
+}
+
+#title {
+    position: absolute;
+    font-size: 26px;
+    font-weight: 100;
+    top: 15px;
+}
+
+#chart-holder {
+    width: 100%;
+    height: 750px;
+    position: relative;
+}
+
+#chart-holder svg {
+    width: 100%;
+    height: 100%;
+    /* erre azért van szükség, mert azt akarjuk, hogy az SVG elemek kontextusa a konténer teljes egészét elfoglalják */
+}
+
+#nobel-map,
+#nobel-winner,
+#nobel-bar,
+#nobel-time,
+#nobel-list {
+    position: absolute;
+}
+
+#nobel-time {
+    top: 0;
+    height: 165px;
+    width: 100%;
+}
+
+#nobel-map {
+    background: azure;
+    top: 175px;
+    width: 800px;
+    height: 350px;
+}
+
+#nobel-winner {
+    top: 525px;
+    left: 800px;
+    height: 250px;
+    width: 350px;
+}
+
+#nobel-bar {
+    top: 525px;
+    height: 250px;
+    width: 800px;
+}
+
+#nobel-list {
+    top: 175px;
+    height: 350px;
+    width: 340px;
+    left: 800px;
+    padding-left: 10px;
+    /* azért van szükség erre, hogy elválassza a térképtől */
+}
+
+
+
+/* Nobel-Chart elemek stílusa, kivétel dimenziók */
+
+.yaxis,
+.xaxis {
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.yaxis path,
+.xaxis path,
+.yaxis line,
+.xaxis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.xaxis .domain {
+    display: none;
+}
+
+/* Nobel-Menu elemek stílusa, kivétel dimenziók */
+
+#nobel-menu {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#nobel-menu div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#nobel-menu div select,
+#nobel-menu div form {
+    margin-top: 5px;
+}
+
+/* Nobel-Map elemek stílusa, kivétel dimenziók */
+
+.graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+}
+
+.land {
+    fill: #ddd;
+}
+
+.boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+}
+
+#map-tooltip {
+    position: absolute;
+    pointer-events: none;
+    /* megintcsak azért van szükségünk erre, hogy lehessen a tooltip alá is klikkelni */
+    color: #eee;
+    font-size: 12px;
+    opacity: 0.7;
+    background: #222;
+    border: 2px solid #555;
+    border-color: goldenrod;
+    padding: 10px;
+    left: -9999px;
+    /* jelenleg nem fog látszódni a pozíció miatt */
+}
+
+#map-tooltip h2 {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+#map-tooltip p {
+    text-align: center;
+}
+
+.country {
+    fill: rgb(175, 195, 186);
+}
+
+.country.active {
+    fill: rgb(155, 175, 166);
+}
+
+.centroid {
+    fill: red;
+    fill-opacity: .3;
+    pointer-events: none;
+    /* ez ahhoz kell, hogy a kör ellenére is kilehessen választani majd az országot */
+}
+
+.centroid.active {
+    fill: goldenrod;
+    fill-opacity: .6;
+}
+
+/* Nobel-List elemek stílusa, kivétel dimenziók */
+
+#nobel-list {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#nobel-list table {
+    font-size: 10px;
+    text-align: center;
+}
+
+#nobel-list table th#year {
+    width: 53px;
+}
+
+#nobel-list table th#category {
+    width: 143px;
+}
+
+#nobel-list table th#name {
+    width: 143px;
+}
+
+#nobel-list h2 {
+    font-size: 14px;
+    margin: 8px;
+    text-align: center;
+}
+
+#nobel-list tr:hover {
+    cursor: pointer;
+    background: lightblue;
+}
+
+/* Nobel-Winner elemek stílusa, kivétel dimenziók */
+
+#nobel-winner {
+    font-size: 11px;
+    overflow: auto;
+    overflow-x: hidden;
+    border-top: 4px solid;
+}
+
+#nobel-winner #winner-title {
+    font-size: 12px;
+    text-align: center;
+    padding: 2px;
+    font-weight: bold;
+}
+
+#nobel-winner #infobox .label {
+    display: inline-block;
+    width: 60px;
+    font-weight: bold;
+}
+
+#nobel-winner #biobox {
+    font-size: 11px;
+}
+
+#nobel-winner #biobox p {
+    text-align: justify;
+}
+
+#nobel-winner #picbox {
+    float: right;
+    margin-left: 5px;
+}
+
+#nobel-winner #picbox img {
+    width: 100px;
+}
+
+#nobel-winner #readmore {
+    font-weight: bold;
+    text-align: center;
+}
