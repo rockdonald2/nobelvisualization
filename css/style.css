@@ -52,11 +52,13 @@ body.hidden {
     transform: translateX(-9999px);
 }
 
-.loading p:nth-child(1) {
+.loading p:nth-child(1),
+.loaded p:nth-child(1) {
     margin-bottom: 2rem;
 }
 
-.loading p:nth-child(2) {
+.loading p:nth-child(2),
+.loaded p:nth-child(2) {
     color: hsl(0, 0%, 60%);
     opacity: 0.5;
 }
