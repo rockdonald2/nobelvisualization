@@ -9,9 +9,6 @@ d3.queue()
     .await(ready);
 
 function ready(error, worldMap, countryNames, countryData, winnersData) {
-    // mindig az oldal tetején tölt be
-    window.scrollTo(0, 0);
-
     // logulunk bármiféle hibát a console-ra
     if (error) {
         return console.warn(error);

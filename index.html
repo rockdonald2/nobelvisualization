@@ -10,6 +10,12 @@
             href="css/style.css">
     </head>
 
+    <script>
+        window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+        }
+    </script>
+
     <body class="hidden">
         <div class="loading">
             <p>Currently fetching data...</p>
